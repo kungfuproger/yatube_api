@@ -58,3 +58,4 @@ class FollowingViewSet(ListCreateViewSet):
         username = serializer.initial_data.get('following')
         following = get_object_or_404(User, username=username)
         serializer.save(user=self.request.user, following=following)
+

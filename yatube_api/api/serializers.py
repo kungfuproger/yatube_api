@@ -62,3 +62,4 @@ class FollowingSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "Подписка на себя невозможна")
             return value
+
