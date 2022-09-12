@@ -1,7 +1,6 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 
-from posts.models import Comment, Group, Post, User
-
+from posts.models import Comment, Group, Post, Follow, User
 
 class GroupSerializer(serializers.ModelSerializer):
 
@@ -34,8 +33,30 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class FollowingSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+        default=serializers.CurrentUserDefault(),
+    )
+    following = serializers.SlugRelatedField(
+        slug_field='username',
+        queryset=User.objects.all()
+    )
 
     class Meta:
-        model = User
+        model = Follow
         fields = ('user', 'following')
-        read_only_fields = ('user',)
+
+        validators = [
+            validators.UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=('user', 'following'),
+                message='Подписка уже оформлена'
+            )
+        ]
+
+        def validate_following(self, value):
+            if self.context.get('request').method == 'POST':
+                if self.context.get('request').user == value:
+                    raise serializers.ValidationError("Подписка на себя невозможна")
+                return value

@@ -17,5 +17,5 @@ urlpatterns = [
     path('', include('djoser.urls')),
     path('', include('djoser.urls.jwt')),
     path('', include(router.urls)),
-    path('follow', FollowingViewSet),
+    path('follow/', FollowingViewSet.as_view({'get': 'list', 'post': 'create'})),
 ]
