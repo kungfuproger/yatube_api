@@ -1,9 +1,8 @@
 import base64
 
-from rest_framework import serializers, validators
 from django.core.files.base import ContentFile
-
 from posts.models import Comment, Follow, Group, Post, User
+from rest_framework import serializers, validators
 
 
 class GroupSerializer(serializers.ModelSerializer):
