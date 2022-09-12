@@ -2,6 +2,7 @@ from rest_framework import serializers, validators
 
 from posts.models import Comment, Group, Post, Follow, User
 
+
 class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -14,7 +15,7 @@ class PostSerializer(serializers.ModelSerializer):
         slug_field='username',
         read_only=True
     )
-   
+
     class Meta:
         model = Post
         fields = '__all__'
@@ -58,5 +59,6 @@ class FollowingSerializer(serializers.ModelSerializer):
         def validate_following(self, value):
             if self.context.get('request').method == 'POST':
                 if self.context.get('request').user == value:
-                    raise serializers.ValidationError("Подписка на себя невозможна")
+                    raise serializers.ValidationError(
+                        "Подписка на себя невозможна")
                 return value
