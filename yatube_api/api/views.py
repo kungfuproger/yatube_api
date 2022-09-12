@@ -9,11 +9,6 @@ from .serializers import (CommentSerializer, FollowingSerializer,
                           GroupSerializer, PostSerializer)
 
 
-class ListCreateViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
-                        viewsets.GenericViewSet):
-    pass
-
-
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -44,7 +39,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, post=self.get_post())
 
 
-class FollowingViewSet(ListCreateViewSet):
+class FollowingViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                       viewsets.GenericViewSet):
     serializer_class = FollowingSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
@@ -56,5 +52,5 @@ class FollowingViewSet(ListCreateViewSet):
 
     def perform_create(self, serializer):
         username = serializer.initial_data.get('following')
-        following = get_object_or_404(User, username=username)
+        following = User.objects.get(username=username)
         serializer.save(user=self.request.user, following=following)
