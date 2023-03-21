@@ -1,5 +1,4 @@
 # api_final
-api final
 
 Yatube на view-классах в виде API.
 
