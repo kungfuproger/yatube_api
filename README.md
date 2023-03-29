@@ -1,4 +1,4 @@
-# Yatube API
+# Yatube API (учебный проект)
 
 API для блога Yatube.
 
